@@ -1,0 +1,163 @@
+{
+  "currency": "EUR",
+  "year": 2026,
+  "bpost": {
+    "description": "bpost tarifs particuliers 2026 - Offre Standard (Belgique + Europe)",
+    "zones": {
+      "BE": ["Belgium"],
+      "EU_NEAR": ["Germany", "France", "Luxembourg", "Netherlands"],
+      "EU_REST": [
+        "Austria",
+        "Bulgaria",
+        "Croatia",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Estonia",
+        "Finland",
+        "Greece",
+        "Hungary",
+        "Ireland",
+        "Italy",
+        "Latvia",
+        "Lithuania",
+        "Malta",
+        "Poland",
+        "Portugal",
+        "Romania",
+        "Slovakia",
+        "Slovenia",
+        "Spain",
+        "Sweden"
+      ]
+    },
+    "prices": {
+      "BE": [
+        { "maxKg": 2, "price": 7.10 },
+        { "maxKg": 5, "price": 7.85 },
+        { "maxKg": 10, "price": 8.65 },
+        { "maxKg": 20, "price": 13.40 },
+        { "maxKg": 30, "price": 17.00 }
+      ],
+      "EU_NEAR": [
+        { "maxKg": 2, "price": 18.10 },
+        { "maxKg": 5, "price": 18.10 },
+        { "maxKg": 10, "price": 18.10 },
+        { "maxKg": 20, "price": 43.80 },
+        { "maxKg": 30, "price": 43.80 }
+      ],
+      "EU_REST": [
+        { "maxKg": 2, "price": 36.20 },
+        { "maxKg": 5, "price": 36.20 },
+        { "maxKg": 10, "price": 54.30 },
+        { "maxKg": 20, "price": 87.60 },
+        { "maxKg": 30, "price": 109.50 }
+      ]
+    },
+    "asOf": "2026-01-01",
+    "sources": [
+      {
+        "label": "bpost - tarifs particuliers 2026",
+        "url": "https://www.bpost.be/fr/tarifs-particuliers-2026"
+      }
+    ]
+  },
+  "mondialRelay": {
+    "description": "Mondial Relay tarifs 2026 - Lockers & Points Relais uniquement (TTC)",
+    "service": "points_relais_locker",
+    "countries": ["France", "Belgium", "Luxembourg", "Netherlands", "Spain", "Portugal", "Italy", "Germany", "Austria", "Poland"],
+    "pricesPerCountry": {
+      "France": [
+        { "maxKg": 0.25, "price": 4.10 },
+        { "maxKg": 0.5, "price": 4.10 },
+        { "maxKg": 1, "price": 5.99 },
+        { "maxKg": 2, "price": 7.99 },
+        { "maxKg": 4, "price": 7.99 },
+        { "maxKg": 5, "price": 15.99 },
+        { "maxKg": 7, "price": 15.99 },
+        { "maxKg": 10, "price": 15.99 },
+        { "maxKg": 15, "price": 25.99 },
+        { "maxKg": 25, "price": 25.99 }
+      ],
+      "Belgium": [
+        { "maxKg": 0.5, "price": 4.60 },
+        { "maxKg": 1, "price": 6.60 },
+        { "maxKg": 2, "price": 8.30 },
+        { "maxKg": 4, "price": 9.30 },
+        { "maxKg": 10, "price": 17.40 },
+        { "maxKg": 25, "price": 26.00 }
+      ],
+      "Luxembourg": [
+        { "maxKg": 0.5, "price": 4.60 },
+        { "maxKg": 1, "price": 6.60 },
+        { "maxKg": 2, "price": 8.30 },
+        { "maxKg": 4, "price": 9.30 },
+        { "maxKg": 10, "price": 17.40 },
+        { "maxKg": 25, "price": 26.00 }
+      ],
+      "Netherlands": [
+        { "maxKg": 0.5, "price": 6.60 },
+        { "maxKg": 1, "price": 9.50 },
+        { "maxKg": 2, "price": 10.60 },
+        { "maxKg": 4, "price": 13.10 },
+        { "maxKg": 10, "price": 19.40 },
+        { "maxKg": 25, "price": 28.80 }
+      ],
+      "Spain": [
+        { "maxKg": 0.5, "price": 6.60 },
+        { "maxKg": 1, "price": 9.50 },
+        { "maxKg": 2, "price": 10.60 },
+        { "maxKg": 4, "price": 13.10 },
+        { "maxKg": 10, "price": 19.40 },
+        { "maxKg": 25, "price": 28.80 }
+      ],
+      "Portugal": [
+        { "maxKg": 0.5, "price": 6.60 },
+        { "maxKg": 1, "price": 9.50 },
+        { "maxKg": 2, "price": 10.60 },
+        { "maxKg": 4, "price": 13.10 },
+        { "maxKg": 10, "price": 19.40 },
+        { "maxKg": 25, "price": 28.80 }
+      ],
+      "Italy": [
+        { "maxKg": 0.5, "price": 6.60 },
+        { "maxKg": 1, "price": 9.50 },
+        { "maxKg": 2, "price": 10.60 },
+        { "maxKg": 4, "price": 13.10 },
+        { "maxKg": 10, "price": 19.40 },
+        { "maxKg": 25, "price": 28.80 }
+      ],
+      "Germany": [
+        { "maxKg": 0.5, "price": 6.60 },
+        { "maxKg": 1, "price": 9.50 },
+        { "maxKg": 2, "price": 10.60 },
+        { "maxKg": 4, "price": 13.10 },
+        { "maxKg": 10, "price": 19.40 },
+        { "maxKg": 25, "price": 28.80 }
+      ],
+      "Austria": [
+        { "maxKg": 0.5, "price": 6.60 },
+        { "maxKg": 1, "price": 9.50 },
+        { "maxKg": 2, "price": 10.60 },
+        { "maxKg": 4, "price": 13.10 },
+        { "maxKg": 10, "price": 19.40 },
+        { "maxKg": 25, "price": 28.80 }
+      ],
+      "Poland": [
+        { "maxKg": 0.5, "price": 7.20 },
+        { "maxKg": 1, "price": 10.40 },
+        { "maxKg": 2, "price": 10.90 },
+        { "maxKg": 4, "price": 13.40 },
+        { "maxKg": 10, "price": 19.80 },
+        { "maxKg": 25, "price": 29.50 }
+      ]
+    },
+    "asOf": "2026-02-16",
+    "sources": [
+      {
+        "label": "Mondial Relay - tarifs expeditions (France)",
+        "url": "https://www.mondialrelay.fr/envoi-de-colis/tarifs-expeditions/"
+      }
+    ]
+  }
+}

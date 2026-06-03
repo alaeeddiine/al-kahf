@@ -36,3 +36,36 @@
     transform: rotate(360deg);
   }
 }
+/* Overlay plein écran */
+.mr-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 12px;
+}
+
+/* Conteneur du widget */
+.mr-widget-container {
+  width: 100%;
+  max-width: 420px;
+  height: 85vh;
+
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden; /* 🔥 empêche le débordement */
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .mr-widget-container {
+    max-width: 100%;
+    height: 90vh;
+    border-radius: 10px;
+  }
+}
