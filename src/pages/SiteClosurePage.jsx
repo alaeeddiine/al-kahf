@@ -98,17 +98,14 @@ const SiteClosurePage = ({ settings }) => {
         <div className="site-closure-brand">
           <span className="site-closure-logo-wrap">
             <img className="site-closure-logo-base" src={logo} alt="ALKAHF" />
-            <img
-              className="site-closure-logo-text"
-              src={logo}
-              alt=""
-              aria-hidden="true"
-            />
+            <img className="site-closure-logo-text" src={logo} alt="" aria-hidden="true" />
           </span>
         </div>
+
         <div className="site-closure-card">
           <h1>{title}</h1>
           <p>{subtitle}</p>
+
           {showActivationDate && activationDate && (
             <div className="site-closure-date">
               Retour prevu le <strong>{activationDate}</strong>
@@ -116,7 +113,7 @@ const SiteClosurePage = ({ settings }) => {
           )}
 
           {showNewsletterInput && (
-            <>
+            <div className="site-closure-newsletter-block">
               {newsletterText && (
                 <p className="site-closure-newsletter-text">{newsletterText}</p>
               )}
@@ -132,7 +129,7 @@ const SiteClosurePage = ({ settings }) => {
                 <button type="submit">OK</button>
               </form>
               {newsletterMessage && <p className="newsletter-message">{newsletterMessage}</p>}
-            </>
+            </div>
           )}
         </div>
       </section>

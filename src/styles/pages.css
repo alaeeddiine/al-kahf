@@ -2037,6 +2037,31 @@ button:disabled {
   animation: fadeIn 0.8s ease-out;
 }
 
+.books-page .books-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.books-page .book-card-link {
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.books-page .book-card {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.books-page .book-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 /* HERO SECTION SPECIALE */
 .books-hero {
   height: 50vh !important; /* Plus courte que la home */
@@ -2968,8 +2993,19 @@ button:disabled {
 }
 
 @media (max-width: 768px) {
-  .books-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .books-page .books-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
   .details-title { font-size: 1.8rem; }
+}
+
+@media (max-width: 520px) {
+  .books-page .books-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .books-page .book-card {
+    min-height: 0;
+  }
 }
 
 /* =========================================
@@ -3201,6 +3237,55 @@ button:disabled {
   color: red;
   font-weight: 700;
   margin-top: 0.5rem;
+}
+
+/* Home books grid: 2 per row on mobile/tablet */
+.latest-books .home-books-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.latest-books .home-book-card-link {
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.latest-books .home-book-card-link * {
+  text-decoration: none;
+  color: inherit;
+}
+
+.latest-books .home-books-grid .book-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.latest-books .home-books-grid .book-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.latest-books .home-books-grid .book-footer {
+  margin-top: auto;
+}
+
+@media (min-width: 1025px) {
+  .latest-books .home-books-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .latest-books .home-books-grid {
+    gap: 0.75rem;
+  }
 }
 .details-modal {
   background: #fff;
@@ -5508,9 +5593,11 @@ button:disabled {
   align-content: center;
   justify-content: center;
   overflow: hidden;
-  background: #0d0f14;
+  background:
+    radial-gradient(circle at top, rgba(212, 175, 55, 0.08), transparent 24%),
+    linear-gradient(180deg, #07080b 0%, #0d1117 48%, #050608 100%);
   color: var(--white);
-  padding: 20px;
+  padding: 24px;
   font-family: 'Cairo', 'Amiri', sans-serif;
 }
 
@@ -5529,25 +5616,24 @@ button:disabled {
     linear-gradient(135deg, #111827 0%, #1f1710 48%, #050505 100%);
   background-position: center;
   background-size: cover;
-  filter: blur(6px) saturate(0.75);
-  opacity: 0.28;
-  transform: scale(1.08);
+  filter: blur(8px) saturate(0.82) contrast(0.92);
+  opacity: 0.34;
+  transform: scale(1.1);
 }
 
 .site-closure-overlay {
   background:
-    radial-gradient(circle at center, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.72)),
-    linear-gradient(180deg, rgba(4, 6, 10, 0.24), rgba(4, 6, 10, 0.8));
+    radial-gradient(circle at center, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.82)),
+    linear-gradient(180deg, rgba(4, 6, 10, 0.22), rgba(4, 6, 10, 0.86));
 }
 
 .site-closure-content {
   position: relative;
   z-index: 1;
-  width: min(640px, 100%);
-  text-align: center;
+  width: min(620px, 100%);
   display: grid;
   place-items: center;
-  gap: 18px;
+  gap: 12px;
   margin: auto;
   animation: closureReveal 0.75s ease both;
 }
@@ -5560,7 +5646,7 @@ button:disabled {
 
 .site-closure-logo-wrap {
   position: relative;
-  width: clamp(128px, 16vw, 190px);
+  width: clamp(112px, 14vw, 160px);
   display: block;
 }
 
@@ -5590,30 +5676,61 @@ button:disabled {
 .site-closure-card {
   width: 100%;
   display: grid;
-  gap: 14px;
-  padding: clamp(1.2rem, 3vw, 2rem);
+  gap: 10px;
+  padding: clamp(1rem, 2.2vw, 1.4rem);
   border: 1px solid rgba(255, 196, 0, 0.12);
   border-radius: 1px;
-  background: rgba(8, 10, 14, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    rgba(8, 10, 14, 0.42);
   backdrop-filter: blur(14px);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+  text-align: center;
+}
+
+.site-closure-card-head {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin: 0 auto;
+  padding: 0.42rem 0.68rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.site-closure-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.12);
+}
+
+.site-closure-status-text {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .site-closure-card h1 {
   margin: 0;
   color: var(--white);
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(1.9rem, 4.8vw, 3rem);
   line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   text-wrap: balance;
 }
 
 .site-closure-card > p {
   margin: 0 auto;
-  max-width: 540px;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 1rem;
+  max-width: 520px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.98rem;
   line-height: 1.6;
 }
 
@@ -5633,7 +5750,7 @@ button:disabled {
   padding: 0.82rem 1.2rem;
   font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   backdrop-filter: blur(10px);
 }
@@ -5642,20 +5759,28 @@ button:disabled {
   color: var(--gold);
 }
 
+.site-closure-newsletter-block {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  margin-top: 2px;
+}
+
 /* Newsletter input under the date */
 .site-closure-newsletter {
   display: flex;
   gap: 8px;
   justify-content: center;
   align-items: center;
-  margin-top: 6px;
+  margin-top: 2px;
+  width: 100%;
 }
 
 .site-closure-newsletter input {
   min-width: 220px;
   max-width: 320px;
   padding: 10px 12px;
-  border-radius: 6px;
+  border-radius: 1px;
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.03);
   color: var(--white);
@@ -5667,7 +5792,7 @@ button:disabled {
   color: #0b0b0b;
   border: none;
   padding: 10px 14px;
-  border-radius: 6px;
+  border-radius: 1px;
   font-weight: 800;
   cursor: pointer;
 }
@@ -5678,10 +5803,10 @@ button:disabled {
 
 /* Newsletter descriptive text (above input) */
 .site-closure-newsletter-text {
-  margin: 8px auto 4px auto;
+  margin: 0 auto;
   max-width: 540px;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
+  font-size: 0.96rem;
   line-height: 1.5;
   text-align: center;
 }
@@ -5712,12 +5837,12 @@ button:disabled {
   }
 
   .site-closure-content {
-    gap: 14px;
+    gap: 10px;
+    width: min(100%, 640px);
   }
 
   .site-closure-card {
-    color: gold;
-    padding: 1rem;
+    padding: 0.95rem;
     border-radius: 1px;
   }
 
@@ -5725,5 +5850,24 @@ button:disabled {
     filter: blur(8px);
     transform: scale(1.06);
     opacity: 0.5;
+  }
+
+  .site-closure-newsletter {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .site-closure-card-head {
+    width: 100%;
+  }
+
+  .site-closure-card h1 {
+    font-size: clamp(1.7rem, 8vw, 2.4rem);
+  }
+
+  .site-closure-newsletter input,
+  .site-closure-newsletter button {
+    width: 100%;
+    max-width: none;
   }
 }

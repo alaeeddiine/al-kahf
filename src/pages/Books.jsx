@@ -17,6 +17,11 @@ import {
 } from "firebase/firestore";
 
 const getPriceWithTax = (price) => +Number(price ?? 0).toFixed(2);
+const getStockValue = (book) => Number(book?.stock ?? 0);
+const isLimitedStock = (book) => {
+  const stock = getStockValue(book);
+  return stock >= 1 && stock <= 4;
+};
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -197,10 +202,7 @@ const Books = () => {
     }
 
     if (sortBy === "stock-limited") {
-      result = result.filter((b) => {
-        const stock = Number(b?.stock ?? 0);
-        return stock === 1 || stock === 2;
-      });
+      result = result.filter(isLimitedStock);
     }
 
     if (sortBy === "price-asc")
@@ -406,36 +408,50 @@ const Books = () => {
 
                       <div className="book-info">
                         <div className="meta">
-                          <span className="book-category">{book.category}</span>
-                          {sortBy === "stock-limited" && (Number(book.stock ?? 0) === 1 || Number(book.stock ?? 0) === 2) ? (
+                          <span className="book-category">
+                            {book.category}
+                          </span>
+
+                          {sortBy === "stock-limited" &&
+                            isLimitedStock(book) ? (
                             <span className="stock-chip-limited">
-                              <span className="stock-chip-label">Stock restant:</span> {Number(book.stock ?? 0)}
+                              <span className="stock-chip-label">
+                                Stock restant:
+                              </span>{" "}
+                              {getStockValue(book)}
                             </span>
                           ) : null}
                         </div>
-                        <h3>{book.title}</h3>
-                        <p className="book-edition">Edition {book.edition}</p>
 
-                        <span className="price">
-                          {book.promoPrice && book.promoPrice < book.price ? (
-                            <>
-                              <s>
-                                {formatPrice(
-                                  getPriceWithTax(book.price)
-                                )}
-                              </s>{" "}
-                              <strong>
-                                {formatPrice(
-                                  getPriceWithTax(book.promoPrice)
-                                )}
-                              </strong>
-                            </>
+                        <h3>{book.title}</h3>
+
+                        <p className="book-edition">
+                          Edition {book.edition}
+                        </p>
+
+                        <div className="book-footer">
+                          <span className="price">
+                            {book.promoPrice &&
+                            book.promoPrice < book.price ? (
+                              <>
+                                <s>
+                                  {formatPrice(
+                                    getPriceWithTax(book.price)
+                                  )}
+                                </s>{" "}
+                                <strong>
+                                  {formatPrice(
+                                    getPriceWithTax(book.promoPrice)
+                                  )}
+                                </strong>
+                              </>
                             ) : (
-                            formatPrice(
-                              getPriceWithTax(book.price)
-                            )
-                          )}
-                        </span>
+                              formatPrice(
+                                getPriceWithTax(book.price)
+                              )
+                            )}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </Link>

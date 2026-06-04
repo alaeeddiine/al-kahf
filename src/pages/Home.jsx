@@ -271,13 +271,13 @@ const Home = () => {
             <p className="no-data">Aucun livre disponible pour le moment.</p>
           ) : (
             <>
-              <div className="books-grid">
+              <div className="books-grid home-books-grid">
                 {latestBooks.map((book) => (
                   <Link
                     key={book.id}
                     to={`/book/${book.id}`}       
                     state={{ bookData: book }} 
-                    className="book-card-link">
+                    className="book-card-link home-book-card-link">
                     <div className="book-card">
                       <div className="book-image">
                         <img
