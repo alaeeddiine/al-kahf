@@ -54,7 +54,7 @@ const Footer = () => {
             </div> */}
             <div className="contact-item">
               <FaEnvelope className="c-icon" />
-              <p>alkahf.be@gmail.com</p>
+              <p>contact@alkahf.be</p>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@ const Footer = () => {
           <h4>Suivez-nous</h4>
           <div className="gold-underline"></div>
           <div className="social-links-row">
-            <a href="mailto:alkahf.be@gmail.com" className="social-circle"><FaEnvelope /></a>
+            <a href="mailto:contact@alkahf.be" className="social-circle"><FaEnvelope /></a>
             <a href="https://www.instagram.com/alkahf.be/" className="social-circle"><FaInstagram /></a>
             <a href="https://www.vinted.be/member/271277738-maktaba-al-kahf" className="social-circle"><FaStore /></a>
           </div>

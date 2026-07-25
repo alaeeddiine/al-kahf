@@ -18,7 +18,7 @@ const LegalNotice = () => {
           <p>
             Nom commercial : <strong>Al Kahf</strong><br />
             Statut : Société<br />
-            Email : alkahf.be@gmail.com<br />
+            Email : contact@alkahf.be<br />
             Numéro d’entreprise (BCE) : 1033.560.437<br />
             Numéro de TVA : BE1033560437
           </p>
@@ -79,7 +79,7 @@ const LegalNotice = () => {
 
         <div className="legal-card">
           <h2>8. Contact</h2>
-          <p>📧 <strong>alkahf.be@gmail.com</strong></p>
+          <p>📧 <strong>contact@alkahf.be</strong></p>
         </div>
 
       </div>

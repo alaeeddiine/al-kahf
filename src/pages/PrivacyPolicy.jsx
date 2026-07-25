@@ -64,7 +64,7 @@ const PrivacyPolicy = () => {
         <div className="legal-card">
           <h2>Contact RGPD</h2>
           <p>
-            Email : <strong>alkahf.be@gmail.com</strong>
+            Email : <strong>contact@alkahf.be</strong>
           </p>
         </div>
 

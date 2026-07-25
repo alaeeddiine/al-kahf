@@ -5,8 +5,6 @@ const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 const {defineSecret} = require("firebase-functions/params");
 const admin = require("firebase-admin");
 const crypto = require("node:crypto");
-const chromium = require("@sparticuz/chromium");
-const puppeteer = require("puppeteer-core");
 const nodemailer = require("nodemailer");
 
 const stripeSecret = defineSecret("STRIPE_SECRET");
@@ -393,7 +391,7 @@ const buildInvoiceEmailHtml = (invoiceNumber, order) => {
       <h1 style="margin:0 0 10px;font-size:26px;color:#141414;">FACTURE</h1>
       <p style="margin:0 0 2px;"><strong>AL KAHF</strong></p>
       <p style="margin:0 0 2px;">30 Avenue Émile Verhaeren, 1348 Louvain La-Neuve, Belgique</p>
-      <p style="margin:0 0 12px;">Email: alkahf.be@gmail.com | TVA: BE1033560437</p>
+      <p style="margin:0 0 12px;">Email: contact@alkahf.be | TVA: BE1033560437</p>
 
       <p style="margin:0 0 2px;"><strong>Numéro de facture :</strong> ${escapeHtml(String(invoiceNumber || "-"))}</p>
       <p style="margin:0 0 10px;"><strong>Date :</strong> ${escapeHtml(orderDate.toLocaleDateString("fr-FR"))}</p>
@@ -745,7 +743,7 @@ const buildInvoicePdfHtml = (invoiceNumber, order) => {
     <div class="footer">
       <div class="footer-box">
         Nom : <b>AL KAHF</b> • N° d’entreprise : <b>1033.560.437</b> • TVA : <b>BE1033560437</b><br>
-        30 Avenue Émile Verhaeren • 1348 Louvain La-Neuve • IBAN : <b>LT663250063380783140</b>
+        30 Avenue Émile Verhaeren • 1348 Louvain La-Neuve • Email : <b>contact@alkahf.be</b> • IBAN : <b>LT663250063380783140</b>
       </div>
     </div>
   </body>
@@ -773,15 +771,45 @@ const looksLikePdfBuffer = (value) => {
 const generateInvoicePdfBuffer = async (invoiceNumber, order) => {
   let browser;
   try {
+    const chromium = require("@sparticuz/chromium");
+    const puppeteer = require("puppeteer-core");
     const executablePath = await chromium.executablePath();
     browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
+      args: [
+        ...chromium.args,
+        "--disable-dev-shm-usage",
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+      ],
+      defaultViewport: {
+        width: 794,
+        height: 1123,
+        deviceScaleFactor: 1,
+      },
       executablePath,
       headless: chromium.headless,
     });
     const page = await browser.newPage();
-    await page.setContent(buildInvoicePdfHtml(invoiceNumber, order), {waitUntil: "load"});
+    page.setDefaultNavigationTimeout(30_000);
+    page.setDefaultTimeout(30_000);
+    await page.emulateMediaType("screen");
+
+    const html = buildInvoicePdfHtml(invoiceNumber, order);
+    const dataUrl = `data:text/html;charset=utf-8;base64,${Buffer.from(html).toString("base64")}`;
+
+    await page.goto(dataUrl, {waitUntil: ["domcontentloaded", "networkidle0"]});
+    await page.evaluateHandle("document.fonts ? document.fonts.ready : Promise.resolve()");
+    await page.waitForFunction(
+        () => document.body && document.body.innerText.includes("FACTURE"),
+    );
+
+    const textLength = await page.evaluate(() =>
+      (document.body?.innerText || "").replace(/\s+/g, "").length,
+    );
+    if (textLength < 80) {
+      throw new Error(`Invoice PDF page rendered without enough text (${textLength} chars).`);
+    }
+
     const pdfBytes = await page.pdf({
       format: "A4",
       printBackground: true,
@@ -796,6 +824,10 @@ const generateInvoicePdfBuffer = async (invoiceNumber, order) => {
       throw new Error(`Generated invoice PDF is invalid (header="${header}", bytes=${bytes}).`);
     }
 
+    if (pdfBuffer.length < 12_000) {
+      throw new Error(`Generated invoice PDF is suspiciously small (${pdfBuffer.length} bytes).`);
+    }
+
     return pdfBuffer;
   } finally {
     if (browser) await browser.close();
@@ -805,7 +837,7 @@ const generateInvoicePdfBuffer = async (invoiceNumber, order) => {
 const sendInvoiceEmail = async ({to, invoiceNumber, internalOrderId, order}) => {
   const smtpUrl = String(smtpUrlSecret.value() || "").trim();
   const smtpFrom = String(smtpFromSecret.value() || "").trim();
-  const defaultSmtpFrom = "AL KAHF <alkahf.be@gmail.com>";
+  const defaultSmtpFrom = "AL KAHF <contact@alkahf.be>";
   const smtpSender = smtpFrom || defaultSmtpFrom;
   const safeInvoiceNumber = sanitizeFilenamePart(invoiceNumber) || "AL-KAHF";
   const attachmentFilename = `facture-${safeInvoiceNumber}.pdf`;
@@ -845,7 +877,7 @@ const sendInvoiceEmail = async ({to, invoiceNumber, internalOrderId, order}) => 
 
   const invoicePdfBase64 = invoicePdfBuffer.toString("base64");
   const configuredFrom = String(resendFromSecret.value() || "").trim();
-  const primaryFrom = configuredFrom || "AL KAHF <facture@alkahf.be>";
+  const primaryFrom = configuredFrom || "AL KAHF <contact@alkahf.be>";
   const fallbackFrom = "AL KAHF <onboarding@resend.dev>";
 
   const sendWithFrom = async (fromAddress) => {
@@ -895,7 +927,7 @@ const sendInvoiceEmail = async ({to, invoiceNumber, internalOrderId, order}) => 
       } catch (fallbackError) {
         throw new Error(
             `Resend API error (${fallbackError.status}): ${fallbackError.body}. ` +
-            "Action requise: verifier le domaine alkahf.be sur Resend et configurer le secret RESEND_FROM (ex: AL KAHF <facture@alkahf.be>).",
+            "Action requise: verifier le domaine alkahf.be sur Resend et configurer le secret RESEND_FROM (ex: AL KAHF <contact@alkahf.be>).",
         );
       }
     }

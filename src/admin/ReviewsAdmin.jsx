@@ -132,7 +132,7 @@ const AdminReviews = () => {
             <FaCheckCircle />
           </div>
           <div className="stat-info">
-            <span className="stat-label">Total Avis</span>
+            <span className="stat-label">Avis Actif</span>
             <span className="stat-value">{activeReviewsKpi}</span>
           </div>
         </div>
@@ -146,7 +146,7 @@ const AdminReviews = () => {
             <FaEyeSlash />
           </div>
           <div className="stat-info">
-            <span className="stat-label">Total Avis</span>
+            <span className="stat-label">Avis Privé</span>
             <span className="stat-value">{privateReviewsKpi}</span>
           </div>
         </div>

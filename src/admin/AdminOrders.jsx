@@ -48,7 +48,7 @@ const AdminOrders = () => {
   const COMPANY_INFO = {
     name: "AL KAHF",
     address: "30 Avenue Émile Verhaeren\n1348 Louvain La-Neuve\nBelgique",
-    email: "alkahf.be@gmail.com",
+    email: "contact@alkahf.be",
     vatNumber: "BE1033560437",
     enterpriseNumber: "1033.560.437",
     paymentMode: "Virement bancaire",
@@ -544,7 +544,7 @@ const AdminOrders = () => {
           <div class="footer">
             <div class="footer-box">
               Nom : <b>${escapeHtml(COMPANY_INFO.name)}</b> • N° d’entreprise : <b>${escapeHtml(COMPANY_INFO.enterpriseNumber)}</b> • TVA : <b>${escapeHtml(COMPANY_INFO.vatNumber)}</b><br>
-              ${escapeHtml(companyFooterAddress)} • IBAN : <b>${escapeHtml(COMPANY_INFO.iban)}</b>
+              ${escapeHtml(companyFooterAddress)} • Email : <b>${escapeHtml(COMPANY_INFO.email)}</b> • IBAN : <b>${escapeHtml(COMPANY_INFO.iban)}</b>
             </div>
           </div>
         </body>
