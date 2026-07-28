@@ -5,7 +5,6 @@ const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 const {defineSecret} = require("firebase-functions/params");
 const admin = require("firebase-admin");
 const crypto = require("node:crypto");
-const nodemailer = require("nodemailer");
 
 const stripeSecret = defineSecret("STRIPE_SECRET");
 const stripeWebhookSecret = defineSecret("STRIPE_WEBHOOK_SECRET");
@@ -768,6 +767,26 @@ const looksLikePdfBuffer = (value) => {
   return tail.includes("%%EOF");
 };
 
+const normalizeResendFrom = (value) => {
+  const fallback = "AL KAHF <contact@alkahf.be>";
+  const raw = String(value || "").trim();
+  if (!raw) return fallback;
+
+  const cleaned = raw
+      .replace(/^['"`]+|['"`]+$/g, "")
+      .replace(/[<>]+$/g, ">")
+      .trim();
+  const emailOnlyPattern = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
+  const namedEmailPattern = /^[^<>]+<\s*[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+\s*>$/;
+
+  if (emailOnlyPattern.test(cleaned) || namedEmailPattern.test(cleaned)) {
+    return cleaned;
+  }
+
+  console.warn(`Invalid RESEND_FROM value ignored: "${raw}"`);
+  return fallback;
+};
+
 const generateInvoicePdfBuffer = async (invoiceNumber, order) => {
   let browser;
   try {
@@ -835,50 +854,17 @@ const generateInvoicePdfBuffer = async (invoiceNumber, order) => {
 };
 
 const sendInvoiceEmail = async ({to, invoiceNumber, internalOrderId, order}) => {
-  const smtpUrl = String(smtpUrlSecret.value() || "").trim();
-  const smtpFrom = String(smtpFromSecret.value() || "").trim();
-  const defaultSmtpFrom = "AL KAHF <contact@alkahf.be>";
-  const smtpSender = smtpFrom || defaultSmtpFrom;
   const safeInvoiceNumber = sanitizeFilenamePart(invoiceNumber) || "AL-KAHF";
   const attachmentFilename = `facture-${safeInvoiceNumber}.pdf`;
   const invoicePdfBuffer = await generateInvoicePdfBuffer(invoiceNumber, order);
 
-  if (smtpUrl) {
-    try {
-      const transporter = nodemailer.createTransport(smtpUrl);
-      await transporter.verify();
-      await transporter.sendMail({
-        from: smtpSender,
-        to,
-        subject: invoiceNumber ? `Votre facture AL KAHF` : `Votre facture AL KAHF`,
-        html: buildInvoiceEmailHtml(invoiceNumber, order),
-        attachments: [
-          {
-            filename: attachmentFilename,
-            content: invoicePdfBuffer,
-            contentType: "application/pdf",
-            contentDisposition: "attachment",
-          },
-        ],
-      });
-      return;
-    } catch (smtpError) {
-      console.error("SMTP send failed, fallback to Resend:", smtpError);
-    }
-  }
-
   const apiKey = String(resendApiKey.value() || "").trim();
   if (!apiKey) {
-    if (smtpUrl) {
-      throw new Error("SMTP configured but failed, and RESEND_API_KEY is missing.");
-    }
     throw new Error("Missing RESEND_API_KEY secret.");
   }
 
   const invoicePdfBase64 = invoicePdfBuffer.toString("base64");
-  const configuredFrom = String(resendFromSecret.value() || "").trim();
-  const primaryFrom = configuredFrom || "AL KAHF <contact@alkahf.be>";
-  const fallbackFrom = "AL KAHF <onboarding@resend.dev>";
+  const primaryFrom = normalizeResendFrom(resendFromSecret.value());
 
   const sendWithFrom = async (fromAddress) => {
     const response = await fetch("https://api.resend.com/emails", {
@@ -915,21 +901,11 @@ const sendInvoiceEmail = async ({to, invoiceNumber, internalOrderId, order}) => 
   try {
     await sendWithFrom(primaryFrom);
   } catch (primaryError) {
-    const canTryFallback =
-      primaryError?.status === 403 &&
-      primaryError?.domainNotVerified &&
-      primaryFrom !== fallbackFrom;
-
-    if (canTryFallback) {
-      try {
-        await sendWithFrom(fallbackFrom);
-        return;
-      } catch (fallbackError) {
-        throw new Error(
-            `Resend API error (${fallbackError.status}): ${fallbackError.body}. ` +
-            "Action requise: verifier le domaine alkahf.be sur Resend et configurer le secret RESEND_FROM (ex: AL KAHF <contact@alkahf.be>).",
-        );
-      }
+    if (primaryError?.domainNotVerified) {
+      throw new Error(
+          `Resend API error (${primaryError.status}): ${primaryError.body}. ` +
+          "Action requise: verifier le domaine alkahf.be sur Resend.",
+      );
     }
 
     throw new Error(`Resend API error (${primaryError.status}): ${primaryError.body}`);
